@@ -78,17 +78,18 @@ public class LibraryServlet extends HttpServlet {
 	private void updateBook(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		int bookId = Integer.parseInt(req.getParameter("book_id"));
 		int studentId = Integer.parseInt(req.getParameter("student_id"));
-		String borrowDate = req.getParameter("borrow_date");
-		String returnDate = req.getParameter("return_date");
-
 		Book book = bookDAO.findById(bookId);
 		int current_count = book.getCount();
 		book.setCount(current_count - 1);
 		bookDAO.update(book);
 
+		DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		String borrowDate = req.getParameter("borrow_date");
+		String returnDate = req.getParameter("return_date");
+		LocalDate borrowLocalDate = LocalDate.parse(borrowDate, formatters);
+		LocalDate returnLocalDate = LocalDate.parse(returnDate, formatters);
 		boolean state = true;
-		CallCard card = new CallCard(0, bookId, studentId, state, LocalDate.parse(borrowDate),
-				LocalDate.parse(returnDate));
+		CallCard card = new CallCard(0, bookId, studentId, state, borrowLocalDate, returnLocalDate);
 		callCardDAO.add(card);
 
 		listBooks(req, resp);

@@ -49,7 +49,7 @@
       <div class="mb-3">
         <label for="borrow_date" class="form-label">Borrow Date:</label>
         <input type="text" class="form-control" id="borrow_date" name="borrow_date" value="${requestScope.date}"
-               disabled>
+               readonly>
       </div>
 
       <div class="mb-3">
