@@ -41,23 +41,24 @@
         <label for="student_id" class="form-label">Student Name:</label>
         <select class="form-select" name="student_id" id="student_id">
           <c:forEach var="student" items="${requestScope.students}">
-            <option value="student.id">${student.fullName}</option>
+            <option value="${student.id}">${student.fullName}</option>
           </c:forEach>
         </select>
       </div>
 
       <div class="mb-3">
         <label for="borrow_date" class="form-label">Borrow Date:</label>
-        <input type="text" class="form-control" id="borrow_date" value="${requestScope.date}" disabled>
+        <input type="text" class="form-control" id="borrow_date" name="borrow_date" value="${requestScope.date}"
+               disabled>
       </div>
 
       <div class="mb-3">
         <label for="return_date" class="form-label">Return Date:</label>
-        <input type="text" class="form-control" id="return_date" placeholder="dd/MM/yyyy">
+        <input type="text" class="form-control" id="return_date" name="return_date" placeholder="dd/MM/yyyy">
       </div>
 
       <div>
-        <button class="btn btn-primary" type="submit">
+        <button class="btn btn-primary" type="submit" onclick="validateReturnDate()">
           Borrow
         </button>
         <button class="btn btn-secondary" onclick="confirmCancel()">

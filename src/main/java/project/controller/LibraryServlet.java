@@ -1,8 +1,10 @@
 package project.controller;
 
 import project.DAO.BookDAO;
+import project.DAO.CallCardDAO;
 import project.DAO.StudentDAO;
 import project.model.Book;
+import project.model.CallCard;
 import project.model.Student;
 
 import javax.servlet.RequestDispatcher;
@@ -20,6 +22,7 @@ import java.util.List;
 public class LibraryServlet extends HttpServlet {
 	BookDAO bookDAO = new BookDAO();
 	StudentDAO studentDAO = new StudentDAO();
+	CallCardDAO callCardDAO = new CallCardDAO();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -74,10 +77,20 @@ public class LibraryServlet extends HttpServlet {
 
 	private void updateBook(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		int bookId = Integer.parseInt(req.getParameter("book_id"));
+		int studentId = Integer.parseInt(req.getParameter("student_id"));
+		String borrowDate = req.getParameter("borrow_date");
+		String returnDate = req.getParameter("return_date");
+
 		Book book = bookDAO.findById(bookId);
 		int current_count = book.getCount();
 		book.setCount(current_count - 1);
 		bookDAO.update(book);
+
+		boolean state = true;
+		CallCard card = new CallCard(0, bookId, studentId, state, LocalDate.parse(borrowDate),
+				LocalDate.parse(returnDate));
+		callCardDAO.add(card);
+
 		listBooks(req, resp);
 	}
 

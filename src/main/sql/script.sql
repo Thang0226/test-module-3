@@ -100,6 +100,20 @@ begin
 end $$
 delimiter ;
 
+delimiter $$
+drop procedure if exists add_card $$
+create procedure add_card(
+	in in_book_id int,
+	in in_student_id int,
+    in state boolean,
+    in in_borrow_date date,
+    in in_return_date date
+)
+begin
+	insert into card(book_id, student_id, state, borrow_date, return_date) values
+		(in_book_id, in_student_id, state, in_borrow_date, in_return_date);
+end $$
+delimiter ;
 
 
 
