@@ -2,6 +2,7 @@ create database book_library;
 
 use book_library;
 
+drop table if exists Book;
 create table Book (
 	id int primary key auto_increment,
     name varchar(100),
@@ -10,12 +11,14 @@ create table Book (
     count int
 );
 
+drop table if exists Student;
 create table Student (
 	id int primary key auto_increment,
     full_name varchar(50),
     class_name varchar(50)
 );
 
+drop table if exists Call_card;
 create table Call_card (
 	id int primary key auto_increment,
 	book_id int not null,
