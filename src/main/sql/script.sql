@@ -81,7 +81,24 @@ begin
 end $$
 delimiter ;
 
-
+delimiter $$
+drop procedure if exists update_book $$
+create procedure update_book(
+	in in_id int,
+    in in_name varchar(50),
+    in in_author varchar(50),
+    in in_description text,
+    in in_count int
+)
+begin
+	update book set
+		name = in_name,
+        author = in_author,
+        description = in_description,
+        count = in_count
+	where id = in_id;
+end $$
+delimiter ;
 
 
 
