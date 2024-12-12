@@ -21,6 +21,7 @@ create table Student (
 drop table if exists Call_card;
 create table Call_card (
 	id int primary key auto_increment,
+    borrow_id varchar(20),
 	book_id int not null,
     student_id int not null,
     state boolean,
@@ -49,12 +50,12 @@ INSERT INTO Student (full_name, class_name) VALUES
 ('Eve Green', 'Grade 11');
 
 -- Insert records into Call_card table
-INSERT INTO Call_card (book_id, student_id, state, borrow_date, return_date) VALUES
-(1, 1, TRUE, '2024-12-01', '2024-12-15'),
-(2, 2, TRUE, '2024-12-05', '2024-12-20'),
-(3, 3, FALSE, '2024-12-01', '2024-12-10'),
-(4, 4, TRUE, '2024-12-08', '2024-12-22'),
-(5, 5, FALSE, '2024-12-02', '2024-12-10');
+INSERT INTO Call_card (borrow_id, book_id, student_id, state, borrow_date, return_date) VALUES
+('MS-0001', 1, 1, TRUE, '2024-12-01', '2024-12-15'),
+('MS-0002', 2, 2, TRUE, '2024-12-05', '2024-12-20'),
+('MS-0003', 3, 3, FALSE, '2024-12-01', '2024-12-10'),
+('MS-0004', 4, 4, TRUE, '2024-12-08', '2024-12-22'),
+('MS-0005', 5, 5, FALSE, '2024-12-02', '2024-12-10');
 
 
 
@@ -108,6 +109,7 @@ delimiter ;
 delimiter $$
 drop procedure if exists add_card $$
 create procedure add_card(
+	in in_borrow_id varchar(20),
 	in in_book_id int,
 	in in_student_id int,
     in state boolean,
@@ -115,8 +117,8 @@ create procedure add_card(
     in in_return_date date
 )
 begin
-	insert into call_card(book_id, student_id, state, borrow_date, return_date) values
-		(in_book_id, in_student_id, state, in_borrow_date, in_return_date);
+	insert into call_card(borrow_id, book_id, student_id, state, borrow_date, return_date) values
+		(in_borrow_id, in_book_id, in_student_id, state, in_borrow_date, in_return_date);
 end $$
 delimiter ;
 
