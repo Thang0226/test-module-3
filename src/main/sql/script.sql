@@ -122,6 +122,17 @@ begin
 end $$
 delimiter ;
 
+delimiter $$
+drop procedure if exists find_card $$
+create procedure find_card(
+	in in_borrow_id varchar(20)
+)
+begin
+	select * from call_card
+    where borrow_id = in_borrow_id;
+end $$
+delimiter ;
+
 
 
 
