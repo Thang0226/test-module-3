@@ -68,9 +68,9 @@
         <button class="btn btn-primary" type="submit">
           Borrow
         </button>
-        <button class="btn btn-secondary">
+        <a href="#" class="btn btn-secondary" id="cancelLink" onclick="confirmCancel(event)">
           Cancel
-        </button>
+        </a>
       </div>
     </fieldset>
   </form>
@@ -79,11 +79,17 @@
 <script src="../styles/bootstrap.bundle.min.js"></script>
 <script>
   // Function to confirm cancel action
-  function confirmCancel() {
-    const isConfirmed = confirm("Are you sure you want to cancel?");
-    if (isConfirmed) {
-      // Redirect or perform any other action on cancel
-      window.history.back();
+  function confirmCancel(event) {
+    // Prevent the default behavior of the link
+    event.preventDefault();
+
+    // Show a confirmation dialog
+    if (confirm("Are you sure you want to cancel?")) {
+      // If confirmed, redirect to the /library page
+      window.location.href = "/library";
+    } else {
+      // If not confirmed, do nothing (stay on the page)
+      return false;
     }
   }
 </script>
