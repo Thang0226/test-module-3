@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name = "LibraryServlet", urlPatterns = "/library")
 public class LibraryServlet extends HttpServlet {
@@ -33,15 +35,6 @@ public class LibraryServlet extends HttpServlet {
 		switch (action) {
 			case "borrow":
 				showBorrowForm(req, resp);
-				break;
-			case "update_book":
-				updateBook(req, resp);
-				break;
-			case "delete":
-
-				break;
-			case "view":
-
 				break;
 			default:
 				listBooks(req, resp);
@@ -60,9 +53,10 @@ public class LibraryServlet extends HttpServlet {
 			List<Student> students = studentDAO.findAll();
 			req.setAttribute("students", students);
 
-			LocalDate localDate = LocalDate.now();
-			DateTimeFormatter formatters = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-			String date = localDate.format(formatters);
+//			LocalDate localDate = LocalDate.now();
+			LocalDate localDate = LocalDate.parse("2020-02-20");
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			String date = localDate.format(formatter);
 			req.setAttribute("date", date);
 
 			RequestDispatcher dispatcher = req.getRequestDispatcher("library/borrow_form.jsp");
@@ -73,26 +67,6 @@ public class LibraryServlet extends HttpServlet {
 				System.out.println(e.getMessage());
 			}
 		}
-	}
-
-	private void updateBook(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		int bookId = Integer.parseInt(req.getParameter("book_id"));
-		int studentId = Integer.parseInt(req.getParameter("student_id"));
-		Book book = bookDAO.findById(bookId);
-		int current_count = book.getCount();
-		book.setCount(current_count - 1);
-		bookDAO.update(book);
-
-		DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		String borrowDate = req.getParameter("borrow_date");
-		String returnDate = req.getParameter("return_date");
-		LocalDate borrowLocalDate = LocalDate.parse(borrowDate, formatters);
-		LocalDate returnLocalDate = LocalDate.parse(returnDate, formatters);
-		boolean state = true;
-		CallCard card = new CallCard(0, bookId, studentId, state, borrowLocalDate, returnLocalDate);
-		callCardDAO.add(card);
-
-		listBooks(req, resp);
 	}
 
 	private void listBooks(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -116,20 +90,47 @@ public class LibraryServlet extends HttpServlet {
 			action = "";
 		}
 		switch (action) {
-			case "create":
-
-				break;
 			case "update_book":
-				updateBook(req, resp);
-				break;
-			case "delete":
-
-				break;
-			case "search":
-
+				validateInput(req, resp);
 				break;
 			default:
 				break;
 		}
+	}
+
+	private void validateInput(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String borrowID = req.getParameter("borrow_id");
+		String returnDate = req.getParameter("return_date");
+
+		Pattern patternBorrowID = Pattern.compile("^MS-[0-9]{4}$");
+		Matcher matcherBorrowID = patternBorrowID.matcher(borrowID);
+		Pattern patternDate = Pattern.compile("^([0-2][0-9]|3[0-1])/(0[1-9]|1[0-2])/\\d{4}$");
+		Matcher matcherDate = patternDate.matcher(returnDate);
+		if (matcherBorrowID.matches() && matcherDate.matches()) {
+			updateBook(req, resp);
+		} else {
+			req.setAttribute("message", "Invalid input!");
+			showBorrowForm(req, resp);
+		}
+	}
+
+	private void updateBook(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		int bookId = Integer.parseInt(req.getParameter("book_id"));
+		Book book = bookDAO.findById(bookId);
+		int current_count = book.getCount();
+		book.setCount(current_count - 1);
+		bookDAO.update(book);
+
+		int studentId = Integer.parseInt(req.getParameter("student_id"));
+		String borrowDate = req.getParameter("borrow_date");
+		String returnDate = req.getParameter("return_date");
+		DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate borrowLocalDate = LocalDate.parse(borrowDate, formatters);
+		LocalDate returnLocalDate = LocalDate.parse(returnDate, formatters);
+		boolean state = true;
+		CallCard card = new CallCard(0, bookId, studentId, state, borrowLocalDate, returnLocalDate);
+		callCardDAO.add(card);
+
+		listBooks(req, resp);
 	}
 }

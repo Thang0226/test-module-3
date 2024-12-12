@@ -25,7 +25,9 @@ create table Call_card (
     student_id int not null,
     state boolean,
     borrow_date date,
-    return_date date
+    return_date date,
+    foreign key (book_id) references Book (id),
+    foreign key (student_id) references Student (id)
 );
 
 -- Insert records into Book table

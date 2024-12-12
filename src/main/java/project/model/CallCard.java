@@ -3,15 +3,16 @@ package project.model;
 import java.time.LocalDate;
 
 public class CallCard {
-	private int id;
+	private String borrowID;
 	private int bookID;
 	private int studentID;
 	private boolean state;
 	private LocalDate borrowDate;
 	private LocalDate returnDate;
 
-	public CallCard(int id, int bookID, int studentID, boolean state, LocalDate borrowDate, LocalDate returnDate) {
-		this.id = id;
+	public CallCard(String borrowID, int bookID, int studentID, boolean state, LocalDate borrowDate,
+	                LocalDate returnDate) {
+		this.borrowID = borrowID;
 		this.bookID = bookID;
 		this.studentID = studentID;
 		this.state = state;
@@ -19,12 +20,12 @@ public class CallCard {
 		this.returnDate = returnDate;
 	}
 
-	public int getId() {
-		return id;
+	public String getBorrowID() {
+		return borrowID;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setBorrowID(String borrowID) {
+		this.borrowID = borrowID;
 	}
 
 	public int getBookID() {

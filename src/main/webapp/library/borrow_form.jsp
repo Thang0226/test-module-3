@@ -10,7 +10,7 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create New Student</title>
+  <title>Create New Borrow Card</title>
   <link rel="stylesheet" href="../styles/bootstrap.min.css">
 </head>
 
@@ -19,6 +19,13 @@
 <div class="container">
   <!-- Page Title -->
   <h1 class="text-primary text-center mb-4">Borrow Book Form</h1>
+
+  <!-- Message Section -->
+  <p class="text-center">
+    <c:if test='${requestScope.message != null}'>
+      <span class="text-success fw-bold">${requestScope.message}</span>
+    </c:if>
+  </p>
 
   <!-- Form Section -->
   <form method="post" action="library?action=update_book"
@@ -29,7 +36,7 @@
       <input type="hidden" name="book_id" value="${requestScope.book.id}" />
       <div class="mb-3">
         <label for="borrow_id" class="form-label">Borrow ID:</label>
-        <input type="text" class="form-control" name="borrow_id" id="borrow_id">
+        <input type="text" class="form-control" name="borrow_id" id="borrow_id" placeholder="MS-XXXX">
       </div>
 
       <div class="mb-3">
@@ -58,10 +65,10 @@
       </div>
 
       <div>
-        <button class="btn btn-primary" type="submit" onclick="validateReturnDate()">
+        <button class="btn btn-primary" type="submit">
           Borrow
         </button>
-        <button class="btn btn-secondary" onclick="confirmCancel()">
+        <button class="btn btn-secondary">
           Cancel
         </button>
       </div>
@@ -71,31 +78,6 @@
 
 <script src="../styles/bootstrap.bundle.min.js"></script>
 <script>
-  // Get the borrow date from the input field
-  const borrowDateInput = document.getElementById('borrow_date');
-  const returnDateInput = document.getElementById('return_date');
-
-  // Format the borrow date to dd/MM/yyyy
-  const borrowDate = new Date(borrowDateInput.value);
-  const borrowDateFormatted = borrowDate.toLocaleDateString('en-GB'); // 'en-GB' format is dd/MM/yyyy
-  borrowDateInput.value = borrowDateFormatted;
-
-  // Function to validate the return date
-  function validateReturnDate() {
-    const returnDateStr = returnDateInput.value;
-
-    // Check if the entered return date is in the correct format (dd/MM/yyyy)
-    const returnDateParts = returnDateStr.split('/');
-    if (returnDateParts.length === 3) {
-      const returnDate = new Date(`${returnDateParts[1]}/${returnDateParts[0]}/${returnDateParts[2]}`);
-
-      if (returnDate < borrowDate) {
-        alert('Return date cannot be earlier than the borrow date.');
-        returnDateInput.value = ''; // Clear the return date if it's invalid
-      }
-    }
-  }
-
   // Function to confirm cancel action
   function confirmCancel() {
     const isConfirmed = confirm("Are you sure you want to cancel?");
